@@ -282,8 +282,8 @@ class PasswordCreationActivity : BasePgpActivity(), OpenPgpServiceConnection.OnB
     private fun parseGpgIdentifier(identifier: String): GpgIdentifier? {
         if (identifier.isEmpty()) return null
         // Match long key IDs:
-        // FF22334455667788 or 0xFF22334455667788
-        val maybeLongKeyId = identifier.removePrefix("0x").takeIf {
+        // FF22334455667788 or 0xFF22334455667788, with optional trailing '!'
+        val maybeLongKeyId = identifier.removePrefix("0x").removeSuffix("!").takeIf {
             it.matches("[a-fA-F0-9]{16}".toRegex())
         }
         if (maybeLongKeyId != null) {
@@ -292,8 +292,8 @@ class PasswordCreationActivity : BasePgpActivity(), OpenPgpServiceConnection.OnB
         }
 
         // Match fingerprints:
-        // FF223344556677889900112233445566778899 or 0xFF223344556677889900112233445566778899
-        val maybeFingerprint = identifier.removePrefix("0x").takeIf {
+        // FF223344556677889900112233445566778899 or 0xFF223344556677889900112233445566778899, with optional trailing '!'
+        val maybeFingerprint = identifier.removePrefix("0x").removeSuffix("!").takeIf {
             it.matches("[a-fA-F0-9]{40}".toRegex())
         }
         if (maybeFingerprint != null) {
