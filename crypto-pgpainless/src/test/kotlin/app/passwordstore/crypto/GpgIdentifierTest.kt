@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
 class GpgIdentifierTest {
 
   @Test
-  fun parseHexKeyIdWithout0xPrefix() {
+  fun parseHexKeyIdWithoutPrefixOrSuffix() {
     val identifier = GpgIdentifier.fromString("79E8208280490C77")
     assertNotNull(identifier)
     assertTrue { identifier is GpgIdentifier.KeyId }
@@ -21,6 +21,20 @@ class GpgIdentifierTest {
   @Test
   fun parseHexKeyId() {
     val identifier = GpgIdentifier.fromString("0x79E8208280490C77")
+    assertNotNull(identifier)
+    assertTrue { identifier is GpgIdentifier.KeyId }
+  }
+
+  @Test
+  fun parseHexKeyIdWithBangSuffix() {
+    val identifier = GpgIdentifier.fromString("79E8208280490C77!")
+    assertNotNull(identifier)
+    assertTrue { identifier is GpgIdentifier.KeyId }
+  }
+
+  @Test
+  fun parseHexKeyIdWithBangSuffix() {
+    val identifier = GpgIdentifier.fromString("0x79E8208280490C77!")
     assertNotNull(identifier)
     assertTrue { identifier is GpgIdentifier.KeyId }
   }

@@ -41,18 +41,18 @@ public sealed class GpgIdentifier {
     public fun fromString(identifier: String): GpgIdentifier? {
       if (identifier.isEmpty()) return null
       // Match long key IDs:
-      // FF22334455667788 or 0xFF22334455667788
+      // FF22334455667788 or 0xFF22334455667788, with optional trailing '!'
       val maybeLongKeyId =
-        identifier.removePrefix("0x").takeIf { it.matches("[a-fA-F\\d]{16}".toRegex()) }
+        identifier.removePrefix("0x").removeSuffix("!").takeIf { it.matches("[a-fA-F\\d]{16}".toRegex()) }
       if (maybeLongKeyId != null) {
         val keyId = maybeLongKeyId.toULong(16)
         return KeyId(keyId.toLong())
       }
 
       // Match fingerprints:
-      // FF223344556677889900112233445566778899 or 0xFF223344556677889900112233445566778899
+      // FF223344556677889900112233445566778899 or 0xFF223344556677889900112233445566778899, with optional trailing '!'
       val maybeFingerprint =
-        identifier.removePrefix("0x").takeIf { it.matches("[a-fA-F\\d]{40}".toRegex()) }
+        identifier.removePrefix("0x").removeSuffix("!").takeIf { it.matches("[a-fA-F\\d]{40}".toRegex()) }
       if (maybeFingerprint != null) {
         // Truncating to the long key ID is not a security issue since OpenKeychain only
         // accepts
